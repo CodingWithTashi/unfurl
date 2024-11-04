@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfurl/data/models/tag.dart';
@@ -91,24 +92,92 @@ class TagScreen extends StatelessWidget {
                     child: Text('No tags found, try adding some!'),
                   );
                 }
-                return ListView.builder(
-                  itemCount: tags.length,
-                  itemBuilder: (context, index) {
-                    final tag = tags[index];
-                    return ListTile(
-                      title: Text(tag.tagName),
-                      subtitle: Text(tag.tagDescription),
-                      trailing: Text(tag.status),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddEditTagScreen(tag: tag),
+                return Container(
+                  child: ListView.builder(
+                    itemCount: tags.length,
+                    padding: const EdgeInsets.all(0),
+                    itemBuilder: (context, index) {
+                      final tag = tags[index];
+                      return Dismissible(
+                        key: Key(tag.id.toString()),
+                        background: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-                      },
-                    );
-                  },
+                          padding: const EdgeInsets.only(left: 20),
+                          alignment: Alignment.centerLeft,
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        secondaryBackground: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          child: const Icon(
+                            FluentIcons.delete_24_regular,
+                            color: Colors.red,
+                          ),
+                        ),
+                        confirmDismiss: (direction) async {
+                          if (direction == DismissDirection.endToStart) {
+                            // Delete action
+                            final delete =
+                                await _showDeleteConfirmation(context);
+                            if (delete) {
+                              await ref
+                                  .read(tagsProvider.notifier)
+                                  .deleteTag(tag.id!);
+                            }
+                            return false; // Don't dismiss, we'll handle the UI update through the provider
+                          } else {
+                            // Edit action
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AddEditTagScreen(tag: tag),
+                              ),
+                            );
+                            return false; // Don't dismiss after edit action
+                          }
+                        },
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              tag.tagName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                            subtitle: Text(
+                              tag.tagDescription,
+                              style: TextStyle(),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AddEditTagScreen(tag: tag),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -116,5 +185,31 @@ class TagScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<bool> _showDeleteConfirmation(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Confirm Delete'),
+              content: const Text('Are you sure you want to delete this tag?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +18,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   bool get isEditMode => widget.tag != null;
+  late String _selectedStatus;
 
   @override
   void initState() {
@@ -24,6 +26,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
     _nameController = TextEditingController(text: widget.tag?.tagName ?? '');
     _descriptionController =
         TextEditingController(text: widget.tag?.tagDescription ?? '');
+    _selectedStatus = widget.tag?.status ?? 'active';
   }
 
   @override
@@ -66,7 +69,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
       tagDescription: _descriptionController.text,
       createdDate: widget.tag?.createdDate,
       updatedDate: DateTime.now(),
-      status: widget.tag?.status ?? 'active',
+      status: _selectedStatus,
     );
 
     if (widget.tag == null) {
@@ -95,7 +98,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
-          color: Colors.black87,
         ),
         title: Text(
           isEditMode ? 'Edit Tag' : 'Add Tag',
@@ -108,7 +110,8 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
         actions: [
           if (isEditMode)
             IconButton(
-              icon: const Icon(Icons.delete_outline, color: Colors.red),
+              icon:
+                  const Icon(FluentIcons.delete_24_regular, color: Colors.red),
               onPressed: _handleDelete,
             ),
         ],
@@ -134,15 +137,11 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey[300]!,
-                  ),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey[300]!,
-                  ),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -174,15 +173,11 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey[300]!,
-                  ),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Colors.grey[300]!,
-                  ),
+                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -193,6 +188,53 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 12,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'Status',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: DropdownButtonHideUnderline(
+                child: ButtonTheme(
+                  alignedDropdown: true,
+                  child: DropdownButton<String>(
+                    value: _selectedStatus,
+                    isExpanded: true,
+                    borderRadius: BorderRadius.circular(8),
+                    items: ['active', 'archived'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value[0].toUpperCase() + value.substring(1),
+                          style: const TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedStatus = newValue;
+                        });
+                      }
+                    },
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
                 ),
               ),
             ),
