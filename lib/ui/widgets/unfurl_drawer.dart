@@ -84,7 +84,7 @@ class UnfurlDrawer extends ConsumerWidget {
                     Icons.file_upload_outlined,
                   ),
                   title: const Text(
-                    'Export Tags',
+                    'Export Links/Tags',
                   ),
                   onTap: () {
                     Navigator.pop(context);
@@ -96,7 +96,7 @@ class UnfurlDrawer extends ConsumerWidget {
                     Icons.file_download_outlined,
                   ),
                   title: const Text(
-                    'Import Tags',
+                    'Import Links/Tags',
                   ),
                   onTap: () {
                     Navigator.pop(context);

@@ -33,6 +33,7 @@ class LatestLinkCard extends StatelessWidget {
 
     return Card(
       elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
         side: BorderSide(color: Colors.grey.shade200),

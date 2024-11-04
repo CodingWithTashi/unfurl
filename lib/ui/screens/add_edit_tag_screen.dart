@@ -91,9 +91,8 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Colors.grey[50],
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -102,7 +101,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
         title: Text(
           isEditMode ? 'Edit Tag' : 'Add Tag',
           style: const TextStyle(
-            color: Colors.black87,
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
@@ -126,7 +124,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
@@ -161,7 +158,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
@@ -197,7 +193,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),

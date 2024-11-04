@@ -84,7 +84,7 @@ class Style {
     colorScheme: ColorScheme.fromSeed(
       // Example: Overwrite the primary color
       seedColor: const Color(0xFFc4b5fd), // violet-400
-      primary: const Color(0xFFc4b5fd), // violet-400
+      primary: const Color(0xff7646cd), // violet-400
       onPrimary: Colors.black,
       secondary: const Color(0xFFa78bfa), // violet-400
       onSecondary: Colors.white,

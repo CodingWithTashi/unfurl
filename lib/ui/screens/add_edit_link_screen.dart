@@ -54,7 +54,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
@@ -80,7 +80,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
@@ -151,7 +150,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
@@ -186,7 +184,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
