@@ -40,3 +40,8 @@ class TagsNotifier extends StateNotifier<List<Tag>> {
     state = state.where((tag) => tag.id != id).toList();
   }
 }
+
+final latestTagProvider = StreamProvider<Tag>((ref) {
+  final tagDatabaseService = ref.watch(tagDatabaseServiceProvider);
+  return tagDatabaseService.watchLatestTags().map((tags) => tags.first);
+});

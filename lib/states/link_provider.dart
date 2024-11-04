@@ -11,6 +11,11 @@ final linksProvider =
   return LinksNotifier(databaseService);
 });
 
+final latestLinkProvider = StreamProvider<UnfurlLink?>((ref) {
+  final linkNotifier = ref.watch(linksProvider.notifier);
+  return linkNotifier.watchLatestLink();
+});
+
 class LinksNotifier extends StateNotifier<List<UnfurlLink>> {
   final DatabaseService _databaseService;
 
@@ -39,5 +44,9 @@ class LinksNotifier extends StateNotifier<List<UnfurlLink>> {
   Future<void> deleteLink(int id) async {
     await _databaseService.deleteLink(id);
     state = state.where((link) => link.id != id).toList();
+  }
+
+  Stream<UnfurlLink?> watchLatestLink() {
+    return _databaseService.watchLatestLink();
   }
 }

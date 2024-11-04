@@ -20,17 +20,20 @@ class TagScreen extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               // Image with dark overlay
-              Container(
-                height: height * 0.6,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                  image: DecorationImage(
-                    image: const AssetImage('assets/img/ic_launcher.png'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.6),
-                      BlendMode.darken,
+              Hero(
+                tag: 'ic_launcher-hero-image',
+                child: Container(
+                  height: height * 0.6,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    image: DecorationImage(
+                      image: const AssetImage('assets/img/ic_launcher.png'),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.6),
+                        BlendMode.darken,
+                      ),
                     ),
                   ),
                 ),

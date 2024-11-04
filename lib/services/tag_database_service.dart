@@ -37,7 +37,10 @@ class TagDatabaseService {
 
   Future<List<Tag>> getAllTags() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(
+      tableName,
+      orderBy: 'updatedDate DESC, createdDate DESC',
+    );
     return maps.map((map) => Tag.fromMap(map)).toList();
   }
 
@@ -64,5 +67,16 @@ class TagDatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Stream<List<Tag>> watchLatestTags() {
+    return database.asStream().asyncMap((db) async {
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        orderBy: 'updatedDate DESC, createdDate DESC',
+        limit: 3,
+      );
+      return maps.map((map) => Tag.fromMap(map)).toList();
+    });
   }
 }

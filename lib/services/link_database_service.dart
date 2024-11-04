@@ -38,7 +38,8 @@ class DatabaseService {
 
   Future<List<UnfurlLink>> getAllLinks() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tableName);
+    final List<Map<String, dynamic>> maps = await db.query(tableName,
+        orderBy: 'updatedDate DESC, createdDate DESC');
     return maps.map((map) => UnfurlLink.fromMap(map)).toList();
   }
 
@@ -65,5 +66,20 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Stream<UnfurlLink?> watchLatestLink() {
+    return database.asStream().asyncMap((db) async {
+      final List<Map<String, dynamic>> maps = await db.query(
+        tableName,
+        orderBy: 'updatedDate DESC, createdDate DESC',
+        limit: 1,
+      );
+      if (maps.isNotEmpty) {
+        return UnfurlLink.fromMap(maps.first);
+      } else {
+        return null;
+      }
+    });
   }
 }
