@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/data/models/link.dart';
+import 'package:unfurl/data/models/tag.dart';
 import 'package:unfurl/states/link_provider.dart';
 import 'package:unfurl/states/tag_provider.dart';
 import 'package:unfurl/ui/screens/add_edit_link_screen.dart';
 import 'package:unfurl/ui/screens/add_edit_tag_screen.dart';
 import 'package:unfurl/ui/screens/link_screen.dart';
+import 'package:unfurl/ui/screens/tag_screen.dart';
 import 'package:unfurl/ui/widgets/home_screen/link_card.dart';
 import 'package:unfurl/ui/widgets/home_screen/tag_card.dart';
 
@@ -67,73 +70,65 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Consumer(
                   builder: (context, ref, child) {
-                    final latestTagStream = ref.watch(latestTagProvider);
+                    final tags = ref.watch(tagsProvider);
+                    Tag? latestTag = tags.firstOrNull;
 
-                    return latestTagStream.when(
-                      data: (latestTag) {
-                        if (latestTag != null) {
-                          return LatestTagCard(
-                            latestTag: latestTag,
-                            onEdit: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return AddEditTagScreen(
-                                    tag: latestTag,
-                                  );
-                                },
-                              ));
-                            },
-                            onViewAll: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LinkScreen();
-                              }));
-                            },
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
+                    return LatestTagCard(
+                      latestTag: latestTag,
+                      onEdit: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return AddEditTagScreen(
+                              tag: latestTag,
+                            );
+                          },
+                        ));
                       },
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      error: (error, stackTrace) => Text('Error: $error'),
+                      onViewAll: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return TagScreen();
+                        }));
+                      },
+                      onAdd: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return AddEditTagScreen();
+                          },
+                        ));
+                      },
                     );
                   },
                 ),
                 Consumer(
                   builder: (context, ref, child) {
-                    final latestLinkStream = ref.watch(latestLinkProvider);
+                    final links = ref.watch(linksProvider);
+                    UnfurlLink? latestLink = links.firstOrNull;
 
-                    return latestLinkStream.when(
-                      data: (latestLink) {
-                        if (latestLink != null) {
-                          return LatestLinkCard(
-                            latestLink: latestLink,
-                            onEdit: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return AddEditLinkScreen(
-                                    link: latestLink,
-                                  );
-                                },
-                              ));
-                            },
-                            onViewAll: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LinkScreen();
-                              }));
-                            },
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
+                    return LatestLinkCard(
+                      latestLink: latestLink,
+                      onEdit: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return AddEditLinkScreen(
+                              link: latestLink,
+                            );
+                          },
+                        ));
                       },
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      error: (error, stackTrace) => Text('Error: $error'),
+                      onViewAll: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return LinkScreen();
+                        }));
+                      },
+                      onAdd: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return AddEditLinkScreen();
+                          },
+                        ));
+                      },
                     );
                   },
                 )

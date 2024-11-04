@@ -1,4 +1,6 @@
-class UnfurlLink {
+import 'package:equatable/equatable.dart';
+
+class UnfurlLink extends Equatable {
   final int? id;
   final String title;
   final String description;
@@ -60,4 +62,15 @@ class UnfurlLink {
       status: status ?? this.status,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        description,
+        link,
+        createdDate,
+        updatedDate,
+        status,
+      ];
 }

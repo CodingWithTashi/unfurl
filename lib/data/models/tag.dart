@@ -1,4 +1,6 @@
-class Tag {
+import 'package:equatable/equatable.dart';
+
+class Tag extends Equatable {
   final int? id;
   final String tagName;
   final String tagDescription;
@@ -55,4 +57,14 @@ class Tag {
       status: status ?? this.status,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        tagName,
+        tagDescription,
+        createdDate,
+        updatedDate,
+        status,
+      ];
 }

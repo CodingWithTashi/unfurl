@@ -17,9 +17,9 @@ class AddEditLinkScreen extends ConsumerStatefulWidget {
 }
 
 class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
-  late final titleController;
-  late final descriptionController;
-  late final linkController;
+  late final TextEditingController titleController;
+  late final TextEditingController descriptionController;
+  late final TextEditingController linkController;
   bool get isEditMode => widget.link != null;
   late String _selectedStatus;
   late double height;
@@ -232,6 +232,10 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               child: StreamBuilder<String>(
                   stream: _textStreamController.stream,
                   builder: (context, snapshot) {
+                    if (!snapshot.hasData ||
+                        (snapshot.hasData && snapshot.data!.isEmpty)) {
+                      return const SizedBox.shrink();
+                    }
                     return QrImageView(
                       data: snapshot.data ?? '',
                       version: QrVersions.auto,
