@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/ui/screens/add_edit_link_screen.dart';
 
+import '../../states/link_provider.dart';
 import '../widgets/unfurl_list_tile.dart';
 
 class LinkScreen extends StatelessWidget {
@@ -22,8 +25,7 @@ class LinkScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black54,
                   image: DecorationImage(
-                    image: const NetworkImage(
-                        'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2'),
+                    image: const AssetImage('assets/img/ic_launcher.png'),
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.6),
@@ -49,7 +51,10 @@ class LinkScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        // Handle add new link
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddEditLinkScreen()));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
@@ -78,17 +83,39 @@ class LinkScreen extends StatelessWidget {
 
           // Links List
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(0),
-              children: const [
-                UnfurlListTile(title: 'Gregs Birthday'),
-                Divider(height: 1),
-                UnfurlListTile(title: 'Recipes'),
-                Divider(height: 1),
-                UnfurlListTile(title: 'Travel'),
-                Divider(height: 1),
-                // Add more links as needed
-              ],
+            child: Consumer(
+              builder: (_, ref, __) {
+                final links = ref.watch(linksProvider);
+                if (links.isEmpty) {
+                  return const Center(
+                    child: Text('No links found, try adding some!'),
+                  );
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(0),
+                  itemCount: links.length,
+                  itemBuilder: (context, index) {
+                    final link = links[index];
+                    return Column(
+                      children: [
+                        UnfurlListTile(
+                          title: link.title,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AddEditLinkScreen(link: link),
+                              ),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/models/tag.dart';
+import '../../states/tag_provider.dart';
 
-class AddEditTagScreen extends StatefulWidget {
+class AddEditTagScreen extends ConsumerStatefulWidget {
   final Tag? tag; // Pass null for add mode, existing tag for edit mode
 
   const AddEditTagScreen({super.key, this.tag});
 
   @override
-  State<AddEditTagScreen> createState() => _AddEditTagScreenState();
+  ConsumerState<AddEditTagScreen> createState() => _AddEditTagScreenState();
 }
 
-class _AddEditTagScreenState extends State<AddEditTagScreen> {
+class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   bool get isEditMode => widget.tag != null;
@@ -62,16 +64,24 @@ class _AddEditTagScreenState extends State<AddEditTagScreen> {
       id: widget.tag?.id,
       tagName: _nameController.text,
       tagDescription: _descriptionController.text,
+      createdDate: widget.tag?.createdDate,
+      updatedDate: DateTime.now(),
+      status: widget.tag?.status ?? 'active',
     );
 
-    // Return the tag to the previous screen
-    Navigator.pop(context, tag);
+    if (widget.tag == null) {
+      ref.read(tagsProvider.notifier).addTag(tag);
+    } else {
+      ref.read(tagsProvider.notifier).updateTag(tag);
+    }
+    Navigator.pop(context);
   }
 
   void _handleDelete() async {
     final shouldDelete = await _showDeleteConfirmation();
-    if (shouldDelete && mounted) {
-      Navigator.pop(context, {'delete': true, 'tag': widget.tag});
+    if (shouldDelete && mounted && widget.tag != null) {
+      await ref.read(tagsProvider.notifier).deleteTag(widget.tag!.id!);
+      if (mounted) Navigator.pop(context);
     }
   }
 

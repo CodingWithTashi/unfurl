@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class UnfurlListTile extends StatelessWidget {
   final String title;
+  final Function() onTap;
 
   const UnfurlListTile({
     super.key,
     required this.title,
+    required this.onTap,
   });
 
   @override
@@ -18,9 +20,7 @@ class UnfurlListTile extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
       ),
-      onTap: () {
-        // Handle link tap
-      },
+      onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 8,

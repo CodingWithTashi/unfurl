@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/data/models/tag.dart';
 
-import '../widgets/unfurl_list_tile.dart';
+import '../../states/tag_provider.dart';
 import 'add_edit_tag_screen.dart';
 
 class TagScreen extends StatelessWidget {
@@ -23,8 +25,7 @@ class TagScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.black54,
                   image: DecorationImage(
-                    image: const NetworkImage(
-                        'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2'),
+                    image: const AssetImage('assets/img/ic_launcher.png'),
                     fit: BoxFit.cover,
                     colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.6),
@@ -82,17 +83,34 @@ class TagScreen extends StatelessWidget {
 
           // Links List
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(0),
-              children: const [
-                UnfurlListTile(title: 'Gregs Birthday'),
-                Divider(height: 1),
-                UnfurlListTile(title: 'Recipes'),
-                Divider(height: 1),
-                UnfurlListTile(title: 'Travel'),
-                Divider(height: 1),
-                // Add more links as needed
-              ],
+            child: Consumer(
+              builder: (context, ref, child) {
+                List<Tag> tags = ref.watch(tagsProvider);
+                if (tags.isEmpty) {
+                  return Center(
+                    child: Text('No tags found, try adding some!'),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: tags.length,
+                  itemBuilder: (context, index) {
+                    final tag = tags[index];
+                    return ListTile(
+                      title: Text(tag.tagName),
+                      subtitle: Text(tag.tagDescription),
+                      trailing: Text(tag.status),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddEditTagScreen(tag: tag),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
