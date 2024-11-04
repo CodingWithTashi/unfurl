@@ -6,14 +6,12 @@ import '../../../data/models/link.dart';
 class LatestLinkCard extends StatelessWidget {
   final UnfurlLink latestLink;
   final VoidCallback onEdit;
-  final VoidCallback onDelete;
   final VoidCallback onViewAll;
 
   const LatestLinkCard({
     Key? key,
     required this.latestLink,
     required this.onEdit,
-    required this.onDelete,
     required this.onViewAll,
   }) : super(key: key);
 
@@ -58,20 +56,18 @@ class LatestLinkCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(latestLink.updatedDate.isAfter(latestLink.createdDate)
-                  ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestLink.updatedDate)}'
-                  : 'Created on ${latestLink.createdDate}'),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           trimmedTitle,
@@ -88,42 +84,41 @@ class LatestLinkCard extends StatelessWidget {
                             color: Colors.grey[600],
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        Text(latestLink.updatedDate
+                                .isAfter(latestLink.createdDate)
+                            ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestLink.updatedDate)}'
+                            : 'Created on ${latestLink.createdDate}'),
                         const SizedBox(height: 12),
                       ],
                     ),
                     IconButton(
-                        onPressed: () {}, icon: Icon(Icons.arrow_forward_ios))
+                        onPressed: onEdit, icon: Icon(Icons.arrow_forward_ios))
                   ],
                 ),
-                Divider(
-                  height: 1,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: onViewAll,
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          'View All',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
+              ),
+              Divider(
+                height: 0.4,
+              ),
+              Center(
+                child: TextButton(
+                  onPressed: onViewAll,
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                  ],
+                  ),
+                  child: Text(
+                    'View All',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

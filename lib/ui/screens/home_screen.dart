@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
               Hero(
                 tag: 'ic_launcher-hero-image',
                 child: Container(
-                  height: height * 0.5,
+                  height: height * 0.42,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.black54,
@@ -54,7 +54,6 @@ class HomeScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -63,7 +62,8 @@ class HomeScreen extends StatelessWidget {
 
           // Links List
           Expanded(
-            child: Column(
+            child: ListView(
+              padding: const EdgeInsets.all(5),
               children: [
                 Consumer(
                   builder: (context, ref, child) {
@@ -82,15 +82,6 @@ class HomeScreen extends StatelessWidget {
                                   );
                                 },
                               ));
-                            },
-                            onDelete: () async {
-                              final shouldDelete =
-                                  await _showDeleteConfirmation(context, 'Tag');
-                              if (shouldDelete && latestTag.id != null) {
-                                ref
-                                    .read(linksProvider.notifier)
-                                    .deleteLink(latestTag.id!);
-                              }
                             },
                             onViewAll: () {
                               Navigator.push(context,
@@ -127,16 +118,6 @@ class HomeScreen extends StatelessWidget {
                                   );
                                 },
                               ));
-                            },
-                            onDelete: () async {
-                              final shouldDelete =
-                                  await _showDeleteConfirmation(
-                                      context, 'Link');
-                              if (shouldDelete && latestLink.id != null) {
-                                ref
-                                    .read(linksProvider.notifier)
-                                    .deleteLink(latestLink.id!);
-                              }
                             },
                             onViewAll: () {
                               Navigator.push(context,

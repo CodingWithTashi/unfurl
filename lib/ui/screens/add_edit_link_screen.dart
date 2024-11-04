@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:unfurl/data/models/link.dart';
 
 import '../../states/link_provider.dart';
@@ -19,6 +22,10 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
   late final linkController;
   bool get isEditMode => widget.link != null;
   late String _selectedStatus;
+  late double height;
+  late double width;
+  late final StreamController<String> _textStreamController;
+
   @override
   void initState() {
     titleController = TextEditingController(text: widget.link?.title ?? '');
@@ -26,12 +33,26 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
         TextEditingController(text: widget.link?.description ?? '');
     linkController = TextEditingController(text: widget.link?.link ?? '');
     _selectedStatus = widget.link?.status ?? 'active';
-
+    _textStreamController = StreamController<String>();
+    linkController.addListener(() {
+      _textStreamController.sink.add(linkController.text);
+    });
     super.initState();
   }
 
   @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    linkController.dispose();
+    _textStreamController.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -205,6 +226,18 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                   ),
                 ),
               ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: StreamBuilder<String>(
+                  stream: _textStreamController.stream,
+                  builder: (context, snapshot) {
+                    return QrImageView(
+                      data: snapshot.data ?? '',
+                      version: QrVersions.auto,
+                      size: height * 0.15,
+                    );
+                  }),
             ),
             const Spacer(),
             Row(
