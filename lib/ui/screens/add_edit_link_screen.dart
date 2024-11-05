@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:unfurl/data/models/link.dart';
 
+import '../../data/models/qr_code_generator.dart';
 import '../../states/link_provider.dart';
 
 class AddEditLinkScreen extends ConsumerStatefulWidget {
@@ -64,12 +65,20 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
         ),
         title: Text(!isEditMode ? 'Add Link' : 'Edit Link'),
         actions: [
-          if (isEditMode)
+          if (isEditMode) ...[
+            IconButton(
+              icon: const Icon(
+                FluentIcons.share_24_regular,
+              ),
+              onPressed: () => QRCodeGenerator.showBottomSheet(
+                  ctx: context, data: widget.link!),
+            ),
             IconButton(
               icon:
                   const Icon(FluentIcons.delete_24_regular, color: Colors.red),
               onPressed: _handleDelete,
             ),
+          ]
         ],
       ),
       body: Padding(

@@ -1,6 +1,7 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/data/models/qr_code_generator.dart';
 
 import '../../data/models/tag.dart';
 import '../../states/tag_provider.dart';
@@ -106,12 +107,20 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
           ),
         ),
         actions: [
-          if (isEditMode)
+          if (isEditMode) ...[
+            IconButton(
+              icon: const Icon(
+                FluentIcons.share_24_regular,
+              ),
+              onPressed: () => QRCodeGenerator.showBottomSheet(
+                  ctx: context, data: widget.tag!),
+            ),
             IconButton(
               icon:
                   const Icon(FluentIcons.delete_24_regular, color: Colors.red),
               onPressed: _handleDelete,
             ),
+          ]
         ],
       ),
       body: Padding(

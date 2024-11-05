@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/ui/screens/qr_code_screen.dart';
 
+import '../../services/qrcode_scanner.dart';
 import '../../states/widgets/bottom_nav_bar/bottom_nav_bar_state.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/unfurl_drawer.dart';
@@ -8,13 +10,18 @@ import 'home_screen.dart';
 import 'link_screen.dart';
 import 'tag_screen.dart';
 
-class SkeletonScreen extends ConsumerWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  SkeletonScreen({super.key});
+class SkeletonScreen extends ConsumerStatefulWidget {
+  const SkeletonScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _SkeletonScreenState();
+}
+
+class _SkeletonScreenState extends ConsumerState<SkeletonScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  Widget build(BuildContext context) {
     final int? navIndex = ref.watch(bottomNavProvider) as int?;
     const List<Widget> pageNavigation = <Widget>[
       HomeScreen(),
@@ -45,6 +52,16 @@ class SkeletonScreen extends ConsumerWidget {
       bottomNavigationBar: const BottomNavBar(),
       backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: UnfurlDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          String? res = await Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const QrCodeScreen()));
+          if (res != null) {
+            ref.read(qrCodeScannerServiceProvider).processQRCodeData(res);
+          }
+        },
+        child: const Icon(Icons.qr_code),
+      ),
     );
   }
 }
