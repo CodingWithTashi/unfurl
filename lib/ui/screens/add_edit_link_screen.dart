@@ -87,7 +87,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               controller: titleController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -123,7 +122,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               maxLines: 3,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -157,7 +155,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               controller: linkController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -189,7 +186,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
@@ -206,7 +202,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                         child: Text(
                           value[0].toUpperCase() + value.substring(1),
                           style: const TextStyle(
-                            color: Colors.black87,
                             fontSize: 16,
                           ),
                         ),
@@ -249,8 +244,10 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(
+                              color: Theme.of(context).colorScheme.primary)),
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     child: Text(
                       'Cancel',

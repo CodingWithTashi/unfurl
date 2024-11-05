@@ -131,7 +131,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               controller: _nameController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -166,7 +165,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               maxLines: 3,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -198,7 +196,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
@@ -215,7 +212,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                         child: Text(
                           value[0].toUpperCase() + value.substring(1),
                           style: const TextStyle(
-                            color: Colors.black87,
                             fontSize: 16,
                           ),
                         ),
@@ -242,13 +238,14 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                          borderRadius: BorderRadius.circular(8),
+                          side: BorderSide(
+                              color: Theme.of(context).colorScheme.primary)),
+                      foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     child: Text(
                       'Cancel',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -261,6 +258,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                     onPressed: _handleSubmit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -269,7 +267,6 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                     child: Text(
                       isEditMode ? 'Update' : 'Submit',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
