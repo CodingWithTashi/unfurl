@@ -163,7 +163,7 @@ class LinkScreen extends StatelessWidget {
                             ),
                           ),
                           subtitle: Text(
-                            link.link,
+                            link.link.isNotEmpty ? link.link : link.description,
                             style: TextStyle(),
                           ),
                           onTap: () {

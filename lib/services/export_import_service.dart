@@ -23,16 +23,16 @@ class ExportImportService {
 
       // Define headers for CSV
       final headers = [
-        'type',
-        'id',
-        'title',
-        'description',
-        'link',
-        'tagName',
-        'tagDescription',
-        'createdDate',
-        'updatedDate',
-        'status'
+        'Type',
+        'ID',
+        'Title',
+        'Description',
+        'Link',
+        'Tag Name',
+        'Tag Description',
+        'Created Date',
+        'Updated Date',
+        'Status',
       ];
 
       // Convert to CSV format
@@ -41,32 +41,32 @@ class ExportImportService {
       // Add links
       for (var link in links) {
         exportData.add({
-          'type': 'link',
-          'id': link.id?.toString() ?? '',
-          'title': _escapeCsvField(link.title),
-          'description': _escapeCsvField(link.description),
-          'link': _escapeCsvField(link.link),
-          'tagName': '', // Empty for links
-          'tagDescription': '', // Empty for links
-          'createdDate': link.createdDate.toIso8601String(),
-          'updatedDate': link.updatedDate.toIso8601String(),
-          'status': link.status,
+          'Type': 'Link',
+          'ID': link.id?.toString() ?? '',
+          'Title': _escapeCsvField(link.title),
+          'Description': _escapeCsvField(link.description),
+          'Link': _escapeCsvField(link.link),
+          'Tag Name': '', // Empty for links
+          'Tag Description': '', // Empty for links
+          'Created Date': link.createdDate.toIso8601String(),
+          'Updated Date': link.updatedDate.toIso8601String(),
+          'Status': link.status,
         });
       }
 
       // Add tags
       for (var tag in tags) {
         exportData.add({
-          'type': 'tag',
-          'id': tag.id?.toString() ?? '',
-          'title': '', // Empty for tags
-          'description': '', // Empty for tags
-          'link': '', // Empty for tags
-          'tagName': _escapeCsvField(tag.tagName),
-          'tagDescription': _escapeCsvField(tag.tagDescription),
-          'createdDate': tag.createdDate.toIso8601String(),
-          'updatedDate': tag.updatedDate.toIso8601String(),
-          'status': tag.status,
+          'Type': 'Tag',
+          'ID': tag.id?.toString() ?? '',
+          'Title': '', // Empty for tags
+          'Description': '', // Empty for tags
+          'Link': '', // Empty for tags
+          'Tag Name': _escapeCsvField(tag.tagName),
+          'Tag Description': _escapeCsvField(tag.tagDescription),
+          'Created Date': tag.createdDate.toIso8601String(),
+          'Updated Date': tag.updatedDate.toIso8601String(),
+          'Status': tag.status,
         });
       }
 
@@ -161,38 +161,28 @@ class ExportImportService {
         if (lines[i].trim().isEmpty) continue;
 
         final values = _parseCsvLine(lines[i]);
-        final type = values[headerMap['type']!];
+        final type = values[headerMap['Type']!];
 
-        if (type == 'link') {
+        if (type == 'Link') {
           await _databaseService.insertLink(UnfurlLink(
-            id: int.tryParse(values[headerMap['id']!]),
-            title: values[headerMap['title']!],
-            description: values[headerMap['description']!],
-            link: values[headerMap['link']!],
-            createdDate: DateTime.parse(values[headerMap['createdDate']!]),
-            updatedDate: DateTime.parse(values[headerMap['updatedDate']!]),
-            status: values[headerMap['status']!],
+            id: int.tryParse(values[headerMap['ID']!]),
+            title: values[headerMap['Title']!],
+            description: values[headerMap['Description']!],
+            link: values[headerMap['Link']!],
+            createdDate: DateTime.parse(values[headerMap['Created Date']!]),
+            updatedDate: DateTime.parse(values[headerMap['Updated Date']!]),
+            status: values[headerMap['Status']!],
           ));
-        } else if (type == 'tag') {
+        } else if (type == 'Tag') {
           await _tagDatabaseService.insertTag(Tag(
-            id: int.tryParse(values[headerMap['id']!]),
-            tagName: values[headerMap['tagName']!],
-            tagDescription: values[headerMap['tagDescription']!],
-            createdDate: DateTime.parse(values[headerMap['createdDate']!]),
-            updatedDate: DateTime.parse(values[headerMap['updatedDate']!]),
-            status: values[headerMap['status']!],
+            id: int.tryParse(values[headerMap['ID']!]),
+            tagName: values[headerMap['Tag Name']!],
+            tagDescription: values[headerMap['Tag Description']!],
+            createdDate: DateTime.parse(values[headerMap['Created Date']!]),
+            updatedDate: DateTime.parse(values[headerMap['Updated Date']!]),
+            status: values[headerMap['Status']!],
           ));
         }
-      }
-
-      // Show success message
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Data imported successfully'),
-            duration: Duration(seconds: 3),
-          ),
-        );
       }
     } catch (e, stackTrace) {
       print('Import error: $e');

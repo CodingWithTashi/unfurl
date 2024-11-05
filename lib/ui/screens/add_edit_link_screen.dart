@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:unfurl/data/models/link.dart';
@@ -33,7 +34,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
         TextEditingController(text: widget.link?.description ?? '');
     linkController = TextEditingController(text: widget.link?.link ?? '');
     _selectedStatus = widget.link?.status ?? 'active';
-    _textStreamController = StreamController<String>();
+    _textStreamController = StreamController<String>.broadcast();
     linkController.addListener(() {
       _textStreamController.sink.add(linkController.text);
     });
@@ -54,6 +55,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
@@ -74,193 +76,238 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Link Name',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: titleController,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Purchase Order',
-                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.color
-                          ?.withOpacity(0.6),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Link Name',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Link Description',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              style: TextStyle(
-                  fontSize: 16, color: Theme.of(context).colorScheme.surface),
-              controller: descriptionController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: 'Purchase Order for the month of June',
-                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.color
-                          ?.withOpacity(0.6),
-                    ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Links',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: linkController,
-              decoration: InputDecoration(
-                hintText: 'https://amazon.com',
-                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.color
-                          ?.withOpacity(0.6),
-                    ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Status',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: ButtonTheme(
-                  alignedDropdown: true,
-                  child: DropdownButton<String>(
-                    value: _selectedStatus,
-                    isExpanded: true,
-                    borderRadius: BorderRadius.circular(8),
-                    items: ['active', 'archived'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value[0].toUpperCase() + value.substring(1),
-                          style: const TextStyle(
-                            fontSize: 16,
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: titleController,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Eg. Purchase Order',
+                        hintStyle:
+                            Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color
+                                      ?.withOpacity(0.6),
+                                ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      if (newValue != null) {
-                        // setState(() {
-                        //   _selectedStatus = newValue;
-                        // });
-                      }
-                    },
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Link Description',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      controller: descriptionController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: 'Eg. Purchase Order for the month of June',
+                        hintStyle:
+                            Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color
+                                      ?.withOpacity(0.6),
+                                ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Links',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: linkController,
+                      decoration: InputDecoration(
+                        hintText: 'Eg. https://amazon.com',
+                        hintStyle:
+                            Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color
+                                      ?.withOpacity(0.6),
+                                ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
+                        // Add suffix icon for copy functionality
+                        suffixIcon: StreamBuilder<String>(
+                            stream: _textStreamController.stream,
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData ||
+                                  (snapshot.hasData &&
+                                      snapshot.data!.isEmpty)) {
+                                return const SizedBox.shrink();
+                              }
+                              return IconButton(
+                                icon: const Icon(Icons.content_copy),
+                                onPressed: () async {
+                                  if (linkController.text.isNotEmpty) {
+                                    await Clipboard.setData(
+                                      ClipboardData(text: linkController.text),
+                                    );
+                                    // Show a snackbar to confirm copy
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text('Link copied to clipboard'),
+                                        duration: Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                },
+                                tooltip: 'Copy link',
+                              );
+                            }),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Status',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey[300]!),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<String>(
+                            value: _selectedStatus,
+                            isExpanded: true,
+                            borderRadius: BorderRadius.circular(8),
+                            items: ['active', 'archived'].map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value[0].toUpperCase() + value.substring(1),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                // setState(() {
+                                //   _selectedStatus = newValue;
+                                // });
+                              }
+                            },
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Center(
+                      child: StreamBuilder<String>(
+                          stream: _textStreamController.stream,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData ||
+                                (snapshot.hasData && snapshot.data!.isEmpty)) {
+                              return const SizedBox.shrink();
+                            }
+                            return Container(
+                              color: Theme.of(context).colorScheme.onSecondary,
+                              child: QrImageView(
+                                data: snapshot.data ?? '',
+                                version: QrVersions.auto,
+                                size: height * 0.15,
+                              ),
+                            );
+                          }),
+                    ),
+                  ],
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            Center(
-              child: StreamBuilder<String>(
-                  stream: _textStreamController.stream,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData ||
-                        (snapshot.hasData && snapshot.data!.isEmpty)) {
-                      return const SizedBox.shrink();
-                    }
-                    return QrImageView(
-                      data: snapshot.data ?? '',
-                      version: QrVersions.auto,
-                      size: height * 0.15,
-                    );
-                  }),
-            ),
-            const Spacer(),
             Row(
               children: [
                 Expanded(

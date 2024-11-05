@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/states/tag_provider.dart';
 
 import '../../states/export_import_provider.dart';
+import '../../states/link_provider.dart';
 
 class ExportDialog extends ConsumerWidget {
   const ExportDialog({Key? key}) : super(key: key);
@@ -92,6 +94,9 @@ class ImportDialog extends ConsumerWidget {
               await exportImportService.importData(context);
               if (context.mounted) {
                 Navigator.of(context).pop(); // Close dialog first
+                ref.read(linksProvider.notifier).loadLinks();
+                ref.read(tagsProvider.notifier).loadTags();
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Data imported successfully'),
