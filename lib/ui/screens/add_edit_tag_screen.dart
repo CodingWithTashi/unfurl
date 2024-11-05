@@ -128,9 +128,12 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              style: TextStyle(
+                fontSize: 16,
+              ),
               controller: _nameController,
               decoration: InputDecoration(
-                filled: true,
+                hintText: 'Tag description',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -161,10 +164,13 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              style: TextStyle(
+                fontSize: 16,
+              ),
               controller: _descriptionController,
               maxLines: 3,
               decoration: InputDecoration(
-                filled: true,
+                hintText: 'Tag description',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),

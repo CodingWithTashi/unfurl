@@ -99,7 +99,7 @@ class TagScreen extends StatelessWidget {
                 return Container(
                   child: ListView.builder(
                     itemCount: tags.length,
-                    padding: const EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(5),
                     itemBuilder: (context, index) {
                       final tag = tags[index];
                       return Dismissible(
@@ -152,6 +152,7 @@ class TagScreen extends StatelessWidget {
                           }
                         },
                         child: Card(
+                          color: Theme.of(context).colorScheme.surfaceContainer,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),

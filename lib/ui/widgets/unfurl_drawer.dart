@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../states/widgets/bottom_nav_bar/bottom_nav_bar_state.dart';
+import 'export_import_dialog.dart';
 
 class UnfurlDrawer extends ConsumerWidget {
   const UnfurlDrawer({Key? key}) : super(key: key);
@@ -88,6 +89,11 @@ class UnfurlDrawer extends ConsumerWidget {
                   ),
                   onTap: () {
                     Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ExportDialog(),
+                    );
+
                     // Handle export
                   },
                 ),
@@ -100,7 +106,10 @@ class UnfurlDrawer extends ConsumerWidget {
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    // Handle import
+                    showDialog(
+                      context: context,
+                      builder: (context) => const ImportDialog(),
+                    );
                   },
                 ),
               ],

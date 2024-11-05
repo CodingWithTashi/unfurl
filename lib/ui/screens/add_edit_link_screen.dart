@@ -85,8 +85,11 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
             const SizedBox(height: 8),
             TextField(
               controller: titleController,
+              style: TextStyle(
+                fontSize: 16,
+              ),
               decoration: InputDecoration(
-                filled: true,
+                hintText: 'Add a name',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -118,10 +121,12 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
             ),
             const SizedBox(height: 8),
             TextField(
+              style: TextStyle(
+                  fontSize: 16, color: Theme.of(context).colorScheme.surface),
               controller: descriptionController,
               maxLines: 3,
               decoration: InputDecoration(
-                filled: true,
+                hintText: 'Add a description',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -154,7 +159,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
             TextField(
               controller: linkController,
               decoration: InputDecoration(
-                filled: true,
+                hintText: 'https://example.com',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
