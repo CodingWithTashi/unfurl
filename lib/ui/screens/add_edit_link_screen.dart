@@ -89,7 +89,14 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: 'Add a name',
+                hintText: 'Purchase Order',
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.color
+                          ?.withOpacity(0.6),
+                    ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -116,7 +123,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: Colors.black87,
               ),
             ),
             const SizedBox(height: 8),
@@ -126,7 +132,14 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
               controller: descriptionController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Add a description',
+                hintText: 'Purchase Order for the month of June',
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.color
+                          ?.withOpacity(0.6),
+                    ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -159,7 +172,14 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
             TextField(
               controller: linkController,
               decoration: InputDecoration(
-                hintText: 'https://example.com',
+                hintText: 'https://amazon.com',
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.color
+                          ?.withOpacity(0.6),
+                    ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),

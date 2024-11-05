@@ -178,6 +178,7 @@ class TagScreen extends StatelessWidget {
                                 ),
                               );
                             },
+                            trailing: Icon(Icons.arrow_forward_ios),
                           ),
                         ),
                       );

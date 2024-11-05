@@ -67,7 +67,7 @@ class LatestTagCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: latestTag != null
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +123,7 @@ class LatestTagCard extends StatelessWidget {
                   child: Text(
                     latestTag != null ? 'View All' : 'Add New',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),

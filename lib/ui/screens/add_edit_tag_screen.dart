@@ -133,7 +133,14 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               ),
               controller: _nameController,
               decoration: InputDecoration(
-                hintText: 'Tag description',
+                hintText: 'Travel',
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.color
+                          ?.withOpacity(0.6),
+                    ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -170,7 +177,14 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
               controller: _descriptionController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Tag description',
+                hintText: 'Travel tag',
+                hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.color
+                          ?.withOpacity(0.6),
+                    ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(color: Colors.grey[300]!),

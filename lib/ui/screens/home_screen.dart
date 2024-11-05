@@ -4,10 +4,9 @@ import 'package:unfurl/data/models/link.dart';
 import 'package:unfurl/data/models/tag.dart';
 import 'package:unfurl/states/link_provider.dart';
 import 'package:unfurl/states/tag_provider.dart';
+import 'package:unfurl/states/widgets/bottom_nav_bar/bottom_nav_bar_state.dart';
 import 'package:unfurl/ui/screens/add_edit_link_screen.dart';
 import 'package:unfurl/ui/screens/add_edit_tag_screen.dart';
-import 'package:unfurl/ui/screens/link_screen.dart';
-import 'package:unfurl/ui/screens/tag_screen.dart';
 import 'package:unfurl/ui/widgets/home_screen/link_card.dart';
 import 'package:unfurl/ui/widgets/home_screen/tag_card.dart';
 
@@ -86,10 +85,9 @@ class HomeScreen extends StatelessWidget {
                         ));
                       },
                       onViewAll: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return TagScreen();
-                        }));
+                        ref
+                            .read(bottomNavProvider.notifier)
+                            .setAndPersistValue(2);
                       },
                       onAdd: () {
                         Navigator.push(context, MaterialPageRoute(
@@ -101,6 +99,7 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                 ),
+                const SizedBox(height: 10),
                 Consumer(
                   builder: (context, ref, child) {
                     final links = ref.watch(linksProvider);
@@ -118,10 +117,9 @@ class HomeScreen extends StatelessWidget {
                         ));
                       },
                       onViewAll: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return LinkScreen();
-                        }));
+                        ref
+                            .read(bottomNavProvider.notifier)
+                            .setAndPersistValue(1);
                       },
                       onAdd: () {
                         Navigator.push(context, MaterialPageRoute(
