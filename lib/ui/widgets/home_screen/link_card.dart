@@ -74,31 +74,33 @@ class LatestLinkCard extends StatelessWidget {
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                trimmedTitle!,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  trimmedTitle!,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                trimmedDescription!,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
+                                const SizedBox(height: 8),
+                                Text(
+                                  trimmedDescription!,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(latestLink!.updatedDate
-                                      .isAfter(latestLink!.createdDate)
-                                  ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestLink!.updatedDate)}'
-                                  : 'Created on ${DateFormat('dd/MM hh:mm a').format(latestLink!.createdDate)}'),
-                              const SizedBox(height: 12),
-                            ],
+                                const SizedBox(height: 8),
+                                Text(latestLink!.updatedDate
+                                        .isAfter(latestLink!.createdDate)
+                                    ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestLink!.updatedDate)}'
+                                    : 'Created on ${DateFormat('dd/MM hh:mm a').format(latestLink!.createdDate)}'),
+                                const SizedBox(height: 12),
+                              ],
+                            ),
                           ),
                           IconButton(
                               onPressed: onEdit,

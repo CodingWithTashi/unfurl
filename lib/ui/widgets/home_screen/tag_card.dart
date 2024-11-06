@@ -72,31 +72,37 @@ class LatestTagCard extends StatelessWidget {
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                trimmedTitle!,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  trimmedTitle!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                trimmedDescription,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
+                                const SizedBox(height: 8),
+                                Text(
+                                  trimmedDescription,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(latestTag!.updatedDate
-                                      .isAfter(latestTag!.createdDate)
-                                  ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestTag!.updatedDate)}'
-                                  : 'Created on ${DateFormat('dd/MM hh:mm a').format(latestTag!.createdDate)}'),
-                              const SizedBox(height: 12),
-                            ],
+                                const SizedBox(height: 8),
+                                Text(latestTag!.updatedDate
+                                        .isAfter(latestTag!.createdDate)
+                                    ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestTag!.updatedDate)}'
+                                    : 'Created on ${DateFormat('dd/MM hh:mm a').format(latestTag!.createdDate)}'),
+                                const SizedBox(height: 12),
+                              ],
+                            ),
                           ),
                           IconButton(
                               onPressed: onEdit,

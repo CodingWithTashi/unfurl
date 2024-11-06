@@ -29,7 +29,7 @@ class TagScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     image: DecorationImage(
-                      image: const AssetImage('assets/img/ic_launcher.png'),
+                      image: const AssetImage('assets/img/icon_cover.png'),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(0.6),
@@ -163,6 +163,8 @@ class TagScreen extends StatelessWidget {
                           child: ListTile(
                             title: Text(
                               tag.tagName,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
@@ -171,6 +173,8 @@ class TagScreen extends StatelessWidget {
                             subtitle: Text(
                               tag.tagDescription,
                               style: TextStyle(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             onTap: () {
                               Navigator.push(

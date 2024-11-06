@@ -33,7 +33,7 @@ class HomeScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     image: DecorationImage(
-                      image: const AssetImage('assets/img/ic_launcher.png'),
+                      image: const AssetImage('assets/img/icon_cover.png'),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(0.6),

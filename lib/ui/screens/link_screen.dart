@@ -28,7 +28,7 @@ class LinkScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     image: DecorationImage(
-                      image: const AssetImage('assets/img/ic_launcher.png'),
+                      image: const AssetImage('assets/img/icon_cover.png'),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(0.6),
@@ -162,6 +162,8 @@ class LinkScreen extends StatelessWidget {
                           child: ListTile(
                             title: Text(
                               link.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 16,
@@ -172,6 +174,8 @@ class LinkScreen extends StatelessWidget {
                                   ? link.link
                                   : link.description,
                               style: TextStyle(),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             onTap: () {
                               Navigator.push(
