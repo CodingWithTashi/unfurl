@@ -64,6 +64,18 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
   }
 
   void _handleSubmit() {
+    // add validation for input fields name and description
+    if (_nameController.text.trim().isEmpty ||
+        _descriptionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all the fields'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
     final tag = Tag(
       id: widget.tag?.id,
       tagName: _nameController.text,

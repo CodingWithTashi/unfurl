@@ -95,78 +95,54 @@ class LinkScreen extends StatelessWidget {
                     child: Text('No links found, try adding some!'),
                   );
                 }
-                return ListView.builder(
-                  padding: const EdgeInsets.all(0),
-                  itemCount: links.length,
-                  itemBuilder: (context, index) {
-                    final link = links[index];
-                    return Dismissible(
-                      key: Key(link.id.toString()),
-                      background: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.only(left: 20),
-                        alignment: Alignment.centerLeft,
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.blue,
-                        ),
-                      ),
-                      secondaryBackground: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.red.shade50,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 20),
-                        child: const Icon(
-                          FluentIcons.delete_24_regular,
-                          color: Colors.red,
-                        ),
-                      ),
-                      confirmDismiss: (direction) async {
-                        if (direction == DismissDirection.endToStart) {
-                          // Delete action
-                          final delete = await _showDeleteConfirmation(context);
-                          if (delete) {
-                            await ref
-                                .read(linksProvider.notifier)
-                                .deleteLink(link.id!);
-                          }
-                          return false; // Don't dismiss, we'll handle the UI update through the provider
-                        } else {
-                          // Edit action
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  AddEditLinkScreen(link: link),
-                            ),
-                          );
-                          return false; // Don't dismiss after edit action
-                        }
-                      },
-                      child: Card(
-                        color: Theme.of(context).colorScheme.surfaceContainer,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            link.title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await ref.read(linksProvider.notifier).loadLinks();
+                  },
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(5),
+                    itemCount: links.length,
+                    itemBuilder: (context, index) {
+                      final link = links[index];
+                      return Dismissible(
+                        key: Key(link.id.toString()),
+                        background: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          subtitle: Text(
-                            link.link.isNotEmpty ? link.link : link.description,
-                            style: TextStyle(),
+                          padding: const EdgeInsets.only(left: 20),
+                          alignment: Alignment.centerLeft,
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
                           ),
-                          onTap: () {
+                        ),
+                        secondaryBackground: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          child: const Icon(
+                            FluentIcons.delete_24_regular,
+                            color: Colors.red,
+                          ),
+                        ),
+                        confirmDismiss: (direction) async {
+                          if (direction == DismissDirection.endToStart) {
+                            // Delete action
+                            final delete =
+                                await _showDeleteConfirmation(context);
+                            if (delete) {
+                              await ref
+                                  .read(linksProvider.notifier)
+                                  .deleteLink(link.id!);
+                            }
+                            return false; // Don't dismiss, we'll handle the UI update through the provider
+                          } else {
+                            // Edit action
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -174,12 +150,44 @@ class LinkScreen extends StatelessWidget {
                                     AddEditLinkScreen(link: link),
                               ),
                             );
-                          },
-                          trailing: Icon(Icons.arrow_forward_ios),
+                            return false; // Don't dismiss after edit action
+                          }
+                        },
+                        child: Card(
+                          color: Theme.of(context).colorScheme.surfaceContainer,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              link.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                            subtitle: Text(
+                              link.link.isNotEmpty
+                                  ? link.link
+                                  : link.description,
+                              style: TextStyle(),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AddEditLinkScreen(link: link),
+                                ),
+                              );
+                            },
+                            trailing: Icon(Icons.arrow_forward_ios),
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               },
             ),

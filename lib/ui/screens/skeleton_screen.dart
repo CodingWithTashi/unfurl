@@ -55,6 +55,8 @@ class _SkeletonScreenState extends ConsumerState<SkeletonScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: UnfurlDrawer(),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
         tooltip: 'Add Links/Tags',
         onPressed: () async {
           String? res = await Navigator.push(context,

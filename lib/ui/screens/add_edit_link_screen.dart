@@ -373,6 +373,18 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
   }
 
   void _handleSubmit() {
+    // handle fields validation name,description and links
+    if (titleController.text.isEmpty ||
+        descriptionController.text.isEmpty ||
+        linkController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all the fields'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
     final now = DateTime.now();
     final newLink = UnfurlLink(
       id: widget.link?.id,

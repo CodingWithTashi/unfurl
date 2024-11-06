@@ -96,7 +96,10 @@ class TagScreen extends StatelessWidget {
                     child: Text('No tags found, try adding some!'),
                   );
                 }
-                return Container(
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await ref.read(tagsProvider.notifier).loadTags();
+                  },
                   child: ListView.builder(
                     itemCount: tags.length,
                     padding: const EdgeInsets.all(5),
