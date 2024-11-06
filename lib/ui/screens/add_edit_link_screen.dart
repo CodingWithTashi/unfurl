@@ -101,6 +101,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                     ),
                     const SizedBox(height: 8),
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       controller: titleController,
                       style: TextStyle(
                         fontSize: 16,
@@ -145,6 +146,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                     ),
                     const SizedBox(height: 8),
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -190,6 +192,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                     ),
                     const SizedBox(height: 8),
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       controller: linkController,
                       decoration: InputDecoration(
                         hintText: 'Eg. https://amazon.com',

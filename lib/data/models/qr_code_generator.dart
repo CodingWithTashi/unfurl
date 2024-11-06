@@ -13,9 +13,9 @@ class QRCodeGenerator {
         type: 'Tag',
         id: obj.id?.toString() ??
             DateTime.now().millisecondsSinceEpoch.toString(),
-        title: '', // Null for Tag type
+        title: 'null', // Null for Tag type
         description: '', // Null for Tag type
-        link: '', // Null for Tag type
+        link: 'null', // Null for Tag type
         tagName: obj.tagName,
         tagDescription: obj.tagDescription,
         createdDate: obj.createdDate,
@@ -30,8 +30,8 @@ class QRCodeGenerator {
         title: obj.title,
         description: obj.description,
         link: obj.link,
-        tagName: '', // Null for Link type
-        tagDescription: '', // Null for Link type
+        tagName: 'null', // Null for Link type
+        tagDescription: 'null', // Null for Link type
         createdDate: obj.createdDate,
         updatedDate: obj.updatedDate,
         status: obj.status,

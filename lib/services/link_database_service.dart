@@ -45,7 +45,19 @@ class DatabaseService {
 
   Future<UnfurlLink> insertLink(UnfurlLink link) async {
     final db = await database;
-    final id = await db.insert(tableName, link.toMap());
+    // Use INSERT OR REPLACE to insert or update the record if it already exists
+    final id = await db.rawInsert('''
+    INSERT OR REPLACE INTO links (id, title, description, link, createdDate, updatedDate, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  ''', [
+      link.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      link.title,
+      link.description,
+      link.link,
+      dateTimeToSqlite(link.createdDate),
+      dateTimeToSqlite(link.updatedDate),
+      link.status,
+    ]);
     return link.copyWith(id: id);
   }
 
@@ -82,4 +94,13 @@ class DatabaseService {
       }
     });
   }
+}
+
+String dateTimeToSqlite(DateTime dateTime) {
+  return dateTime.toIso8601String(); // Returns 'YYYY-MM-DDTHH:MM:SS.sss'
+}
+
+DateTime sqliteToDateTime(String dateTimeString) {
+  return DateTime.parse(
+      dateTimeString); // Converts 'YYYY-MM-DDTHH:MM:SS.sss' back to DateTime
 }

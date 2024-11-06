@@ -20,15 +20,7 @@ class QRCodeScannerService {
 
   QRCodeScannerService(this.databaseService, this.tagDatabaseService);
 
-  Future<void> processQRCodeData(String qrCodeData) async {
-    final data = _parseQRCodeData(qrCodeData);
-    if (data.packageName != null && data.packageName != 'com.greg.unfurl') {
-      return;
-    }
-    await _saveToDatabase(data);
-  }
-
-  QRCodeData _parseQRCodeData(String qrCodeData) {
+  QRCodeData parseQRCodeData(String qrCodeData) {
     final parts = qrCodeData.split('||');
     return QRCodeData(
       packageName: parts[0],
@@ -39,13 +31,13 @@ class QRCodeScannerService {
       link: parts[5],
       tagName: parts[6],
       tagDescription: parts[7],
-      createdDate: DateTime.parse(parts[8]),
-      updatedDate: DateTime.parse(parts[9]),
+      createdDate: sqliteToDateTime(parts[8]),
+      updatedDate: sqliteToDateTime(parts[9]),
       status: parts[10],
     );
   }
 
-  Future<void> _saveToDatabase(QRCodeData data) async {
+  Future<void> saveToDatabase(QRCodeData data) async {
     if (data.type == 'Tag') {
       await tagDatabaseService.insertTag(
         Tag(
@@ -70,5 +62,10 @@ class QRCodeScannerService {
         ),
       );
     }
+  }
+
+  DateTime sqliteToDateTime(String dateTimeString) {
+    return DateTime.parse(
+        dateTimeString); // Converts 'YYYY-MM-DDTHH:MM:SS.sss' back to DateTime
   }
 }

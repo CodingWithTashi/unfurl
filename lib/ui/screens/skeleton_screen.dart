@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/states/link_provider.dart';
+import 'package:unfurl/states/tag_provider.dart';
 import 'package:unfurl/ui/screens/qr_code_screen.dart';
 
 import '../../services/qrcode_scanner.dart';
@@ -52,15 +54,75 @@ class _SkeletonScreenState extends ConsumerState<SkeletonScreen> {
       bottomNavigationBar: const BottomNavBar(),
       backgroundColor: Theme.of(context).colorScheme.surface,
       drawer: UnfurlDrawer(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        tooltip: 'Add Links/Tags',
         onPressed: () async {
           String? res = await Navigator.push(context,
               MaterialPageRoute(builder: (context) => const QrCodeScreen()));
           if (res != null) {
-            ref.read(qrCodeScannerServiceProvider).processQRCodeData(res);
+            final data =
+                ref.read(qrCodeScannerServiceProvider).parseQRCodeData(res);
+            if (data.packageName != null &&
+                data.packageName != 'com.greg.unfurl') {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Invalid QR Code'),
+                  duration: const Duration(seconds: 1),
+                ),
+              );
+              return;
+            }
+            // show confirmation dialog
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('QR Code Detected'),
+                  content: Text(
+                      'Do you want to save this ${data.type} to your collection?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(qrCodeScannerServiceProvider)
+                              .saveToDatabase(data);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Saved ${data.type} to collection'),
+                              duration: const Duration(seconds: 1),
+                            ),
+                          );
+                          ref.read(tagsProvider.notifier).loadTags();
+                          ref.read(linksProvider.notifier).loadLinks();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Failed to save ${data.type} to collection, Check qr code'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Save'),
+                    ),
+                  ],
+                );
+              },
+            );
           }
         },
-        child: const Icon(Icons.qr_code),
+        label: Text('Add'),
+        icon: const Icon(Icons.qr_code),
       ),
     );
   }

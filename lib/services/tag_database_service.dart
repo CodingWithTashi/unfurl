@@ -46,7 +46,18 @@ class TagDatabaseService {
 
   Future<Tag> insertTag(Tag tag) async {
     final db = await database;
-    final id = await db.insert(tableName, tag.toMap());
+    // Use INSERT OR REPLACE to insert or update the record if it already exists
+    final id = await db.rawInsert('''
+    INSERT OR REPLACE INTO ${tableName} (id, tagName, tagDescription, createdDate, updatedDate, status)
+    VALUES (?, ?, ?, ?, ?, ?)
+  ''', [
+      tag.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      tag.tagName,
+      tag.tagDescription,
+      dateTimeToSqlite(tag.createdDate),
+      dateTimeToSqlite(tag.updatedDate),
+      tag.status,
+    ]);
     return tag.copyWith(id: id);
   }
 
@@ -79,4 +90,13 @@ class TagDatabaseService {
       return maps.map((map) => Tag.fromMap(map)).toList();
     });
   }
+}
+
+String dateTimeToSqlite(DateTime dateTime) {
+  return dateTime.toIso8601String(); // Returns 'YYYY-MM-DDTHH:MM:SS.sss'
+}
+
+DateTime sqliteToDateTime(String dateTimeString) {
+  return DateTime.parse(
+      dateTimeString); // Converts 'YYYY-MM-DDTHH:MM:SS.sss' back to DateTime
 }

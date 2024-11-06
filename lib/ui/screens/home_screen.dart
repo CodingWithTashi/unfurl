@@ -10,11 +10,11 @@ import 'package:unfurl/ui/screens/add_edit_tag_screen.dart';
 import 'package:unfurl/ui/widgets/home_screen/link_card.dart';
 import 'package:unfurl/ui/widgets/home_screen/tag_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -65,73 +65,79 @@ class HomeScreen extends StatelessWidget {
 
           // Links List
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(5),
-              children: [
-                Consumer(
-                  builder: (context, ref, child) {
-                    final tags = ref.watch(tagsProvider);
-                    Tag? latestTag = tags.firstOrNull;
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.read(linksProvider.notifier).loadLinks();
+                ref.read(tagsProvider.notifier).loadTags();
+              },
+              child: ListView(
+                padding: const EdgeInsets.all(5),
+                children: [
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final tags = ref.watch(tagsProvider);
+                      Tag? latestTag = tags.firstOrNull;
 
-                    return LatestTagCard(
-                      latestTag: latestTag,
-                      onEdit: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return AddEditTagScreen(
-                              tag: latestTag,
-                            );
-                          },
-                        ));
-                      },
-                      onViewAll: () {
-                        ref
-                            .read(bottomNavProvider.notifier)
-                            .setAndPersistValue(2);
-                      },
-                      onAdd: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return AddEditTagScreen();
-                          },
-                        ));
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final links = ref.watch(linksProvider);
-                    UnfurlLink? latestLink = links.firstOrNull;
+                      return LatestTagCard(
+                        latestTag: latestTag,
+                        onEdit: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return AddEditTagScreen(
+                                tag: latestTag,
+                              );
+                            },
+                          ));
+                        },
+                        onViewAll: () {
+                          ref
+                              .read(bottomNavProvider.notifier)
+                              .setAndPersistValue(2);
+                        },
+                        onAdd: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return AddEditTagScreen();
+                            },
+                          ));
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final links = ref.watch(linksProvider);
+                      UnfurlLink? latestLink = links.firstOrNull;
 
-                    return LatestLinkCard(
-                      latestLink: latestLink,
-                      onEdit: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return AddEditLinkScreen(
-                              link: latestLink,
-                            );
-                          },
-                        ));
-                      },
-                      onViewAll: () {
-                        ref
-                            .read(bottomNavProvider.notifier)
-                            .setAndPersistValue(1);
-                      },
-                      onAdd: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return AddEditLinkScreen();
-                          },
-                        ));
-                      },
-                    );
-                  },
-                )
-              ],
+                      return LatestLinkCard(
+                        latestLink: latestLink,
+                        onEdit: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return AddEditLinkScreen(
+                                link: latestLink,
+                              );
+                            },
+                          ));
+                        },
+                        onViewAll: () {
+                          ref
+                              .read(bottomNavProvider.notifier)
+                              .setAndPersistValue(1);
+                        },
+                        onAdd: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return AddEditLinkScreen();
+                            },
+                          ));
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ],

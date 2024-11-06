@@ -142,6 +142,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                     ),
                     const SizedBox(height: 8),
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -186,6 +187,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                     ),
                     const SizedBox(height: 8),
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(
                         fontSize: 16,
                       ),
