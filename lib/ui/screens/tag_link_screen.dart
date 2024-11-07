@@ -42,7 +42,13 @@ class TagLinkScreen extends ConsumerWidget {
                   subtitle: Text(link.link),
                   onTap: () async {
                     if (await canLaunchUrl(Uri.parse(link.link))) {
-                      launchUrl(Uri.parse(link.link));
+                      await launchUrl(Uri.parse(link.link));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Could not launch link'),
+                        ),
+                      );
                     }
                   },
                 );
