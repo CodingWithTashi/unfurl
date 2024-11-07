@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unfurl/states/tag_provider.dart';
 
+import '../../data/models/link.dart';
+import '../../data/models/tag.dart';
 import '../../states/export_import_provider.dart';
-import '../../states/link_provider.dart';
+import '../screens/import_screen.dart';
 
 class ExportDialog extends ConsumerWidget {
   const ExportDialog({Key? key}) : super(key: key);
@@ -91,19 +92,41 @@ class ImportDialog extends ConsumerWidget {
         ElevatedButton(
           onPressed: () async {
             try {
-              await exportImportService.importData(context);
-              if (context.mounted) {
-                Navigator.of(context).pop(); // Close dialog first
-                ref.read(linksProvider.notifier).loadLinks();
-                ref.read(tagsProvider.notifier).loadTags();
-
+              Map<Tag, List<UnfurlLink>> importedData =
+                  await exportImportService.importData(context);
+              if (importedData.isNotEmpty) {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImportScreen(
+                      importData: importedData,
+                      onImport: (data) {
+                        exportImportService.insertData(data, context);
+                      },
+                    ),
+                  ),
+                );
+              } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Data imported successfully'),
-                    backgroundColor: Colors.green,
+                    content: Text('No data found in the file'),
+                    backgroundColor: Colors.red,
                   ),
                 );
               }
+              // if (context.mounted) {
+              //   Navigator.of(context).pop(); // Close dialog first
+              //   ref.read(linksProvider.notifier).loadLinks();
+              //   ref.read(tagsProvider.notifier).loadTags();
+              //
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(
+              //       content: Text('Data imported successfully'),
+              //       backgroundColor: Colors.green,
+              //     ),
+              //   );
+              // }
             } catch (e) {
               if (context.mounted) {
                 Navigator.of(context).pop(); // Close dialog first

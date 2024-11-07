@@ -100,6 +100,22 @@ class DatabaseService {
     );
   }
 
+  // getTagById
+  Future<Tag?> getTagById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> tagMaps = await db.query(
+      tagsTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (tagMaps.isEmpty) {
+      return null;
+    }
+
+    return Tag.fromMap(tagMaps.first);
+  }
+
   // Link operations with tag
   Future<UnfurlLink> insertLink(UnfurlLink link) async {
     final db = await database;
@@ -150,6 +166,22 @@ class DatabaseService {
     }
 
     return link.copyWith(tag: tag);
+  }
+
+  // getTagByName
+  Future<Tag?> getTagByName(String tagName) async {
+    final db = await database;
+    final List<Map<String, dynamic>> tagMaps = await db.query(
+      tagsTable,
+      where: 'tagName = ?',
+      whereArgs: [tagName],
+    );
+
+    if (tagMaps.isEmpty) {
+      return null;
+    }
+
+    return Tag.fromMap(tagMaps.first);
   }
 
   Future<List<UnfurlLink>> getAllLinksWithTags() async {
@@ -219,6 +251,22 @@ class DatabaseService {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // getLinkById
+  Future<UnfurlLink?> getLinkById(int id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> linkMaps = await db.query(
+      linksTable,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (linkMaps.isEmpty) {
+      return null;
+    }
+
+    return UnfurlLink.fromMap(linkMaps.first);
   }
 
   // Helper methods
