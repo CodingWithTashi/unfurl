@@ -204,8 +204,9 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    TextField(
-                      textCapitalization: TextCapitalization.sentences,
+                    TextFormField(
+                      textCapitalization: TextCapitalization.words,
+                      keyboardType: TextInputType.url,
                       controller: linkController,
                       decoration: InputDecoration(
                         hintText: 'Eg. https://amazon.com',
@@ -440,6 +441,15 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
       );
       return;
     }
+    if (!isValidUrl(linkController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid URL'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
     final now = DateTime.now();
     final newLink = UnfurlLink(
       id: widget.link?.id,
@@ -494,5 +504,14 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
           },
         ) ??
         false;
+  }
+
+  bool isValidUrl(String url) {
+    try {
+      Uri uri = Uri.parse(url);
+      return uri.isAbsolute && (uri.hasScheme && uri.hasAuthority);
+    } catch (e) {
+      return false;
+    }
   }
 }

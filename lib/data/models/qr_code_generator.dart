@@ -11,16 +11,19 @@ class QRCodeGenerator {
       return QRCodeData(
         packageName: 'com.greg.unfurl',
         type: 'Tag',
-        id: obj.id?.toString() ??
-            DateTime.now().millisecondsSinceEpoch.toString(),
-        title: 'null', // Null for Tag type
-        description: '', // Null for Tag type
-        link: 'null', // Null for Tag type
-        tagName: obj.tagName,
-        tagDescription: obj.tagDescription,
-        createdDate: obj.createdDate,
-        updatedDate: obj.updatedDate,
-        status: obj.status,
+        id: 'null',
+        title: 'null',
+        description: 'null',
+        link: 'null',
+        createdDate: DateTime.now(),
+        updatedDate: DateTime.now(),
+        status: 'null',
+        tagId: obj.id,
+        tagName: obj.tagName, // Null for Link type
+        tagDescription: obj.tagDescription, // Null for Link type
+        tagCreatedDate: obj.createdDate, // Null for Link type
+        tagUpdatedDate: obj.updatedDate, // Null for Link type
+        tagStatus: obj.status, // Null for Link type
       );
     } else if (obj is UnfurlLink) {
       return QRCodeData(
@@ -30,11 +33,17 @@ class QRCodeGenerator {
         title: obj.title,
         description: obj.description,
         link: obj.link,
-        tagName: 'null', // Null for Link type
-        tagDescription: 'null', // Null for Link type
         createdDate: obj.createdDate,
         updatedDate: obj.updatedDate,
         status: obj.status,
+        tagId: obj.tagId ?? -1,
+        tagName: obj.tag?.tagName ?? 'null', // Null for Link type
+        tagDescription: obj.tag?.tagDescription ?? 'null', // Null for Link type
+        tagCreatedDate:
+            obj.tag?.createdDate ?? DateTime.now(), // Null for Link type
+        tagUpdatedDate:
+            obj.tag?.updatedDate ?? DateTime.now(), // Null for Link type
+        tagStatus: obj.tag?.status ?? 'null', // Null for Link type
       );
     } else {
       throw ArgumentError('Unsupported object type');
@@ -46,14 +55,18 @@ class QRCodeGenerator {
       data.packageName,
       data.type,
       data.id,
-      if (data.type == 'Link') data.title else '',
-      if (data.type == 'Link') data.description else '',
-      if (data.type == 'Link') data.link else '',
+      data.title,
+      data.description,
+      data.link,
+      data.createdDate,
+      data.updatedDate,
+      data.status,
+      data.tagId.toString(),
       data.tagName,
       data.tagDescription,
-      data.createdDate.toIso8601String(),
-      data.updatedDate.toIso8601String(),
-      data.status,
+      data.tagCreatedDate,
+      data.tagUpdatedDate,
+      data.tagStatus,
     ];
     return qrCodeElements.join('||');
   }

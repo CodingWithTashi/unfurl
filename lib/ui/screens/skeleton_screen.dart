@@ -61,6 +61,7 @@ class _SkeletonScreenState extends ConsumerState<SkeletonScreen> {
         onPressed: () async {
           String? res = await Navigator.push(context,
               MaterialPageRoute(builder: (context) => const QrCodeScreen()));
+          print("res: $res");
           if (res != null) {
             final data =
                 ref.read(qrCodeScannerServiceProvider).parseQRCodeData(res);
