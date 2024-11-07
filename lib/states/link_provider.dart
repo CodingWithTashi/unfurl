@@ -20,7 +20,7 @@ class LinksNotifier extends StateNotifier<List<UnfurlLink>> {
 
   Future<void> loadLinks() async {
     print("Loading links");
-    final links = await _databaseService.getAllLinks();
+    final links = await _databaseService.getAllLinksWithTags();
     state = links;
   }
 

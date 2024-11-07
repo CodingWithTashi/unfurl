@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:unfurl/data/models/tag.dart';
 
 class UnfurlLink extends Equatable {
   final int? id;
@@ -7,7 +8,9 @@ class UnfurlLink extends Equatable {
   final String link;
   final DateTime createdDate;
   final DateTime updatedDate;
-  final String status; // 'archive' or 'active'
+  final String status;
+  final int? tagId; // Single tag ID instead of list of tags
+  final Tag? tag; // Optional tag object for convenience
 
   UnfurlLink({
     this.id,
@@ -17,17 +20,31 @@ class UnfurlLink extends Equatable {
     required this.createdDate,
     required this.updatedDate,
     required this.status,
+    this.tagId,
+    this.tag,
   });
 
-  factory UnfurlLink.fromMap(Map<String, dynamic> map) {
+  UnfurlLink copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? link,
+    DateTime? createdDate,
+    DateTime? updatedDate,
+    String? status,
+    int? tagId,
+    Tag? tag,
+  }) {
     return UnfurlLink(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      link: map['link'],
-      createdDate: DateTime.parse(map['createdDate']),
-      updatedDate: DateTime.parse(map['updatedDate']),
-      status: map['status'],
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      link: link ?? this.link,
+      createdDate: createdDate ?? this.createdDate,
+      updatedDate: updatedDate ?? this.updatedDate,
+      status: status ?? this.status,
+      tagId: tagId ?? this.tagId,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -40,26 +57,20 @@ class UnfurlLink extends Equatable {
       'createdDate': createdDate.toIso8601String(),
       'updatedDate': updatedDate.toIso8601String(),
       'status': status,
+      'tagId': tagId,
     };
   }
 
-  UnfurlLink copyWith({
-    int? id,
-    String? title,
-    String? description,
-    String? link,
-    DateTime? createdDate,
-    DateTime? updatedDate,
-    String? status,
-  }) {
+  factory UnfurlLink.fromMap(Map<String, dynamic> map) {
     return UnfurlLink(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      link: link ?? this.link,
-      createdDate: createdDate ?? this.createdDate,
-      updatedDate: updatedDate ?? this.updatedDate,
-      status: status ?? this.status,
+      id: map['id'],
+      title: map['title'],
+      description: map['description'],
+      link: map['link'],
+      createdDate: DateTime.parse(map['createdDate']),
+      updatedDate: DateTime.parse(map['updatedDate']),
+      status: map['status'],
+      tagId: map['tagId'],
     );
   }
 
@@ -72,5 +83,7 @@ class UnfurlLink extends Equatable {
         createdDate,
         updatedDate,
         status,
+        tagId,
+        tag
       ];
 }

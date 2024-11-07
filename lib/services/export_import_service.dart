@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:unfurl/services/tag_database_service.dart';
 
 import '../data/models/link.dart';
 import '../data/models/tag.dart';
@@ -11,15 +10,16 @@ import 'link_database_service.dart';
 
 class ExportImportService {
   final DatabaseService _databaseService;
-  final TagDatabaseService _tagDatabaseService;
 
-  ExportImportService(this._databaseService, this._tagDatabaseService);
+  ExportImportService(
+    this._databaseService,
+  );
 
   Future<String> exportData(BuildContext context) async {
     try {
       // Get all data
-      List<UnfurlLink> links = await _databaseService.getAllLinks();
-      List<Tag> tags = await _tagDatabaseService.getAllTags();
+      List<UnfurlLink> links = await _databaseService.getAllLinksWithTags();
+      List<Tag> tags = await _databaseService.getAllTags();
 
       // Define headers for CSV
       final headers = [
@@ -174,7 +174,7 @@ class ExportImportService {
             status: values[headerMap['Status']!],
           ));
         } else if (type == 'Tag') {
-          await _tagDatabaseService.insertTag(Tag(
+          await _databaseService.insertTag(Tag(
             id: int.tryParse(values[headerMap['ID']!]),
             tagName: values[headerMap['Tag Name']!],
             tagDescription: values[headerMap['Tag Description']!],

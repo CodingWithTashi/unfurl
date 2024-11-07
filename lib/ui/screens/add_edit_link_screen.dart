@@ -8,6 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:unfurl/data/models/link.dart';
 
 import '../../data/models/qr_code_generator.dart';
+import '../../data/models/tag.dart';
 import '../../states/link_provider.dart';
 
 class AddEditLinkScreen extends ConsumerStatefulWidget {
@@ -23,18 +24,30 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
   late final TextEditingController descriptionController;
   late final TextEditingController linkController;
   bool get isEditMode => widget.link != null;
-  late String _selectedStatus;
+  Tag? selectedTag;
   late double height;
   late double width;
   late final StreamController<String> _textStreamController;
-
+  List<Tag> tagList = [];
+  Tag defaultTag = Tag(
+      id: -1,
+      tagName: 'Select',
+      tagDescription: 'Select Tag',
+      createdDate: null,
+      updatedDate: null,
+      status: 'active');
   @override
   void initState() {
     titleController = TextEditingController(text: widget.link?.title ?? '');
     descriptionController =
         TextEditingController(text: widget.link?.description ?? '');
     linkController = TextEditingController(text: widget.link?.link ?? '');
-    _selectedStatus = widget.link?.status ?? 'active';
+    // set default tag value
+    if (widget.link != null && widget.link!.tag != null) {
+      selectedTag = widget.link!.tag;
+    } else {
+      selectedTag = defaultTag;
+    }
     _textStreamController = StreamController<String>.broadcast();
     linkController.addListener(() {
       _textStreamController.sink.add(linkController.text);
@@ -255,7 +268,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                     ),
                     const SizedBox(height: 24),
                     const Text(
-                      'Status',
+                      'Tag',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -267,35 +280,59 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(color: Colors.grey[300]!),
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton<String>(
-                            value: _selectedStatus,
-                            isExpanded: true,
-                            borderRadius: BorderRadius.circular(8),
-                            items: ['active', 'archived'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value[0].toUpperCase() + value.substring(1),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
+                      child: FutureBuilder<List<Tag>>(
+                          future:
+                              ref.read(databaseServiceProvider).getAllTags(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+
+                            // Clear and rebuild the list
+                            tagList = [defaultTag];
+                            if (snapshot.hasData) {
+                              tagList.addAll(snapshot.data!
+                                  .where((tag) => tag.status == 'active'));
+                            }
+
+                            // Ensure selectedTag is in the list
+                            if (!tagList.contains(selectedTag)) {
+                              selectedTag = defaultTag;
+                            }
+
+                            return DropdownButtonHideUnderline(
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButton<Tag>(
+                                  value: selectedTag,
+                                  isExpanded: true,
+                                  borderRadius: BorderRadius.circular(8),
+                                  items: tagList.map((Tag value) {
+                                    return DropdownMenuItem<Tag>(
+                                      value: value,
+                                      child: Text(
+                                        value.tagName,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (Tag? newValue) {
+                                    if (newValue != null) {
+                                      setState(() {
+                                        selectedTag = newValue;
+                                      });
+                                    }
+                                  },
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                // setState(() {
-                                //   _selectedStatus = newValue;
-                                // });
-                              }
-                            },
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                          ),
-                        ),
-                      ),
+                              ),
+                            );
+                          }),
                     ),
                     const SizedBox(height: 16),
                     Center(
@@ -385,6 +422,24 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
       );
       return;
     }
+    if (tagList.isEmpty || tagList.length == 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please add a tag first'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+    if (selectedTag?.id == -1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a tag'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
     final now = DateTime.now();
     final newLink = UnfurlLink(
       id: widget.link?.id,
@@ -393,7 +448,9 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
       link: linkController.text,
       createdDate: widget.link?.createdDate ?? now,
       updatedDate: now,
-      status: _selectedStatus,
+      status: 'active',
+      tagId: selectedTag?.id,
+      tag: selectedTag,
     );
 
     if (widget.link == null) {

@@ -1,24 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfurl/services/link_database_service.dart';
-import 'package:unfurl/services/tag_database_service.dart';
 
 import '../data/models/link.dart';
 import '../data/models/qr_code_data.dart';
 import '../data/models/tag.dart';
 import '../states/link_provider.dart';
-import '../states/tag_provider.dart';
 
 final qrCodeScannerServiceProvider = Provider((ref) {
   final databaseService = ref.watch(databaseServiceProvider);
-  final tagDatabaseService = ref.watch(tagDatabaseServiceProvider);
-  return QRCodeScannerService(databaseService, tagDatabaseService);
+  return QRCodeScannerService(databaseService);
 });
 
 class QRCodeScannerService {
   final DatabaseService databaseService;
-  final TagDatabaseService tagDatabaseService;
 
-  QRCodeScannerService(this.databaseService, this.tagDatabaseService);
+  QRCodeScannerService(this.databaseService);
 
   QRCodeData parseQRCodeData(String qrCodeData) {
     final parts = qrCodeData.split('||');
@@ -39,7 +35,7 @@ class QRCodeScannerService {
 
   Future<void> saveToDatabase(QRCodeData data) async {
     if (data.type == 'Tag') {
-      await tagDatabaseService.insertTag(
+      await databaseService.insertTag(
         Tag(
           id: int.parse(data.id),
           tagName: data.tagName,

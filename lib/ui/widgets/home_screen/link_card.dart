@@ -20,16 +20,13 @@ class LatestLinkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Trim title and description if they are too long
-    final trimmedTitle = (latestLink?.title ?? 'Default Title').length > 50
-        ? '${(latestLink?.title ?? 'Default Title').substring(0, 47)}...'
+    final trimmedTitle = (latestLink?.title ?? 'Default Title').length > 20
+        ? '${(latestLink?.title ?? 'Default Title').substring(0, 10)}...'
         : (latestLink?.title ?? 'Default Title');
 
-    final trimmedDescription = (latestLink?.description ??
-                    'Default Description')
-                .length >
-            100
-        ? '${(latestLink?.description ?? 'Default Description').substring(0, 97)}...'
-        : (latestLink?.description ?? 'Default Description');
+    final trimmedLink = (latestLink?.link ?? 'Default Description').length > 20
+        ? '${(latestLink?.link ?? 'Default Description').substring(0, 15)}...'
+        : (latestLink?.link ?? 'Default Description');
 
     return Card(
       elevation: 0,
@@ -71,41 +68,55 @@ class LatestLinkCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: latestLink != null
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  trimmedTitle!,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
+                    ? InkResponse(
+                        onTap: onEdit,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    trimmedTitle!,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  trimmedDescription!,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[600],
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    trimmedLink!,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(latestLink!.updatedDate
-                                        .isAfter(latestLink!.createdDate)
-                                    ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestLink!.updatedDate)}'
-                                    : 'Created on ${DateFormat('dd/MM hh:mm a').format(latestLink!.createdDate)}'),
-                                const SizedBox(height: 12),
-                              ],
+                                  const SizedBox(height: 8),
+                                  Text(latestLink!.updatedDate
+                                          .isAfter(latestLink!.createdDate)
+                                      ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(latestLink!.updatedDate)}'
+                                      : 'Created on ${DateFormat('dd/MM hh:mm a').format(latestLink!.createdDate)}'),
+                                  const SizedBox(height: 12),
+                                  Chip(
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      elevation: 0,
+                                      labelPadding:
+                                          EdgeInsets.fromLTRB(0, -3, 0, -3),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 0),
+                                      label: Text(latestLink!.tag?.tagName ??
+                                          'No Tag')),
+                                ],
+                              ),
                             ),
-                          ),
-                          IconButton(
-                              onPressed: onEdit,
-                              icon: Icon(Icons.arrow_forward_ios))
-                        ],
+                            Icon(Icons.arrow_forward_ios)
+                          ],
+                        ),
                       )
                     : Padding(
                         padding: const EdgeInsets.symmetric(vertical: 24),

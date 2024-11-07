@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unfurl/data/models/tag.dart';
+import 'package:unfurl/ui/screens/tag_link_screen.dart';
 
 import '../../states/tag_provider.dart';
 import 'add_edit_tag_screen.dart';
@@ -170,11 +171,37 @@ class TagScreen extends StatelessWidget {
                                 fontSize: 16,
                               ),
                             ),
-                            subtitle: Text(
-                              tag.tagDescription,
-                              style: TextStyle(),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 5),
+                                Text(
+                                  tag.tagDescription,
+                                  style: TextStyle(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                GestureDetector(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TagLinkScreen(tagId: tag.id!),
+                                        )),
+                                    child: Text(
+                                      'View Links',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                    )),
+                              ],
                             ),
                             onTap: () {
                               Navigator.push(
