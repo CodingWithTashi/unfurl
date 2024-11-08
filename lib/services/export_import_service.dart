@@ -318,4 +318,129 @@ class ExportImportService {
       );
     }
   }
+
+  // Export service method to fetch data
+  Future<Map<Tag, List<UnfurlLink>>> fetchDataForExport() async {
+    Map<Tag, List<UnfurlLink>> exportData = {};
+
+    try {
+      List<Tag> tags = await _databaseService.getAllTags();
+      List<UnfurlLink> links = await _databaseService.getAllLinksWithTags();
+
+      for (var tag in tags) {
+        final tagLinks = links.where((link) => link.tagId == tag.id).toList();
+        exportData[tag] = tagLinks;
+      }
+
+      return exportData;
+    } catch (e, stackTrace) {
+      print('Fetch error: $e');
+      print('Stack trace: $stackTrace');
+      throw Exception('Failed to fetch data for export: ${e.toString()}');
+    }
+  }
+
+  // Modified export method to handle filtered data
+  Future<String> exportFilteredData(
+      Map<Tag, List<UnfurlLink>> filteredData, BuildContext context) async {
+    try {
+      // Define headers for CSV
+      final headers = [
+        'Type',
+        'ID',
+        'Title',
+        'Description',
+        'Link',
+        'Tag Name',
+        'Tag Description',
+        'Created Date',
+        'Updated Date',
+        'Status',
+      ];
+
+      // Convert to CSV format
+      List<Map<String, String>> exportData = [];
+
+      // Add filtered tags and their associated links
+      for (var tag in filteredData.keys) {
+        exportData.add({
+          'Type': 'Tag',
+          'ID': tag.id?.toString() ?? '',
+          'Title': '',
+          'Description': '',
+          'Link': '',
+          'Tag Name': _escapeCsvField(tag.tagName),
+          'Tag Description': _escapeCsvField(tag.tagDescription),
+          'Created Date': tag.createdDate.toIso8601String(),
+          'Updated Date': tag.updatedDate.toIso8601String(),
+          'Status': tag.status,
+        });
+
+        // Add filtered links for the tag
+        for (var link in filteredData[tag]!) {
+          exportData.add({
+            'Type': 'Link',
+            'ID': link.id?.toString() ?? '',
+            'Title': _escapeCsvField(link.title),
+            'Description': _escapeCsvField(link.description),
+            'Link': _escapeCsvField(link.link),
+            'Tag Name': _escapeCsvField(tag.tagName),
+            'Tag Description': _escapeCsvField(tag.tagDescription),
+            'Created Date': link.createdDate.toIso8601String(),
+            'Updated Date': link.updatedDate.toIso8601String(),
+            'Status': link.status,
+          });
+        }
+      }
+
+      // Convert to CSV string
+      String csvContent = headers.join(',') + '\n';
+      for (var row in exportData) {
+        csvContent += headers
+                .map((header) => _escapeCsvField(row[header] ?? ''))
+                .join(',') +
+            '\n';
+      }
+
+      // Get the downloads directory
+      String? downloadsPath = await _getDownloadsPath();
+      if (downloadsPath == null) {
+        throw Exception('Could not access downloads directory');
+      }
+
+      // Generate timestamp for unique filename
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final filePath = '$downloadsPath/data_export_$timestamp.csv';
+
+      // Save the CSV file
+      final file = File(filePath);
+      await file.writeAsString(csvContent);
+
+      // Show success message
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File exported to: $filePath'),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+
+      return filePath;
+    } catch (e, stackTrace) {
+      print('Export error: $e');
+      print('Stack trace: $stackTrace');
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      throw Exception('Failed to export data: ${e.toString()}');
+    }
+  }
 }

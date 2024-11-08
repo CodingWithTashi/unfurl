@@ -4,7 +4,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:unfurl/data/models/link.dart';
 
 import '../../data/models/qr_code_generator.dart';
@@ -331,25 +330,6 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12),
                                 ),
-                              ),
-                            );
-                          }),
-                    ),
-                    const SizedBox(height: 16),
-                    Center(
-                      child: StreamBuilder<String>(
-                          stream: _textStreamController.stream,
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData ||
-                                (snapshot.hasData && snapshot.data!.isEmpty)) {
-                              return const SizedBox.shrink();
-                            }
-                            return Container(
-                              color: Theme.of(context).colorScheme.onSecondary,
-                              child: QrImageView(
-                                data: snapshot.data ?? '',
-                                version: QrVersions.auto,
-                                size: height * 0.15,
                               ),
                             );
                           }),

@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 import '../../data/models/link.dart';
 import '../../data/models/tag.dart';
 
-class ImportScreen extends StatefulWidget {
-  final Map<Tag, List<UnfurlLink>> importData;
-  final Function(Map<Tag, List<UnfurlLink>>) onImport;
+class FilterScreen extends StatefulWidget {
+  final Map<Tag, List<UnfurlLink>> data;
+  final Function(Map<Tag, List<UnfurlLink>>) onFiltered;
+  final bool isImport;
 
-  const ImportScreen({
+  const FilterScreen({
     Key? key,
-    required this.importData,
-    required this.onImport,
+    required this.data,
+    required this.onFiltered,
+    this.isImport = true,
   }) : super(key: key);
 
   @override
-  _ImportScreenState createState() => _ImportScreenState();
+  _FilterScreenState createState() => _FilterScreenState();
 }
 
-class _ImportScreenState extends State<ImportScreen> {
+class _FilterScreenState extends State<FilterScreen> {
   Map<Tag, List<UnfurlLink>> selectedData = {};
 
   @override
@@ -35,10 +37,10 @@ class _ImportScreenState extends State<ImportScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: widget.importData.length,
+              itemCount: widget.data.length,
               itemBuilder: (context, index) {
-                final tag = widget.importData.keys.elementAt(index);
-                final links = widget.importData[tag]!;
+                final tag = widget.data.keys.elementAt(index);
+                final links = widget.data[tag]!;
                 final isSelected = selectedData.containsKey(tag);
 
                 return ExpansionTile(
@@ -66,31 +68,44 @@ class _ImportScreenState extends State<ImportScreen> {
                     int index = entry.key;
                     var link = entry.value;
                     return ListTile(
-                      leading: Checkbox(
-                        value: isSelected && selectedData[tag]!.contains(link),
-                        onChanged: (value) {
-                          if (value!) {
-                            selectedData[tag]!.add(link);
-                          } else {
-                            selectedData[tag]!.remove(link);
-                          }
-                          setState(() {});
-                        },
-                      ),
-                      title: Text(
-                          '${index + 1}. ${link.link}'), // Adding numbering here
+                      // leading: Checkbox(
+                      //   value: isSelected && selectedData[tag]!.contains(link),
+                      //   onChanged: (value) {
+                      //     if (value!) {
+                      //       selectedData[tag]?.add(link);
+                      //     } else {
+                      //       selectedData[tag]?.remove(link);
+                      //     }
+                      //     setState(() {});
+                      //   },
+                      // ),
+                      title: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Text('${index + 1}. ${link.link}'),
+                      ), // Adding numbering here
                     );
                   }).toList(),
                 );
               },
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              widget.onImport(selectedData);
-              Navigator.pop(context);
-            },
-            child: Text('Import'),
+          Spacer(),
+          Container(
+            padding: const EdgeInsets.all(16),
+            width: double.infinity,
+            child: OutlinedButton(
+              // width: double.infinity,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              onPressed: () {
+                widget.onFiltered(selectedData);
+                Navigator.pop(context);
+              },
+              child: Text(widget.isImport ? 'Import' : 'Export'),
+            ),
           ),
         ],
       ),

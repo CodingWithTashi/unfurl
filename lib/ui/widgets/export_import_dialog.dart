@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unfurl/states/link_provider.dart';
 
 import '../../data/models/link.dart';
 import '../../data/models/tag.dart';
 import '../../states/export_import_provider.dart';
+import '../../states/tag_provider.dart';
 import '../screens/import_screen.dart';
 
 class ExportDialog extends ConsumerWidget {
@@ -16,9 +18,7 @@ class ExportDialog extends ConsumerWidget {
     return AlertDialog(
       title: const Text('Export Data'),
       content: const Text(
-        'Are you sure you want to export all your data to a CSV file? '
-        'This will include all your links and tags.',
-      ),
+          'Are you sure you want to export your Tags to a CSV file? '),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -27,17 +27,28 @@ class ExportDialog extends ConsumerWidget {
         TextButton(
           onPressed: () async {
             try {
-              String path = await exportImportService.exportData(context);
-              if (context.mounted) {
-                Navigator.of(context).pop(); // Close dialog first
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Data exported to: $path'),
-                    duration: const Duration(seconds: 5),
-                    action: SnackBarAction(
-                      label: 'OK',
-                      onPressed: () {},
+              final exportData = await exportImportService.fetchDataForExport();
+
+              //String path = await exportImportService.exportData(context);
+              if (exportData.isNotEmpty) {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FilterScreen(
+                      data: exportData,
+                      onFiltered: (data) {
+                        exportImportService.exportFilteredData(data, context);
+                      },
+                      isImport: false,
                     ),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('No data found in the file'),
+                    backgroundColor: Colors.red,
                   ),
                 );
               }
@@ -79,7 +90,7 @@ class ImportDialog extends ConsumerWidget {
           ),
           SizedBox(height: 8),
           Text(
-            'Note: This will add new records to your existing data. '
+            'Note: This will add new records to your existing Tags. '
             'Make sure your CSV file follows the correct format.',
           ),
         ],
@@ -95,15 +106,18 @@ class ImportDialog extends ConsumerWidget {
               Map<Tag, List<UnfurlLink>> importedData =
                   await exportImportService.importData(context);
               if (importedData.isNotEmpty) {
-                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ImportScreen(
-                      importData: importedData,
-                      onImport: (data) {
-                        exportImportService.insertData(data, context);
+                    builder: (context) => FilterScreen(
+                      data: importedData,
+                      onFiltered: (data) async {
+                        await exportImportService.insertData(data, context);
+                        ref.read(linksProvider.notifier).loadLinks();
+                        ref.read(tagsProvider.notifier).loadTags();
+                        Navigator.pop(context);
                       },
+                      isImport: true,
                     ),
                   ),
                 );
