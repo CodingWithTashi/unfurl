@@ -120,12 +120,15 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
         ),
         actions: [
           if (isEditMode) ...[
-            IconButton(
-              icon: const Icon(
-                FluentIcons.share_24_regular,
+            Visibility(
+              visible: false,
+              child: IconButton(
+                icon: const Icon(
+                  FluentIcons.share_24_regular,
+                ),
+                onPressed: () => QRCodeGenerator.showBottomSheet(
+                    ctx: context, data: widget.tag!),
               ),
-              onPressed: () => QRCodeGenerator.showBottomSheet(
-                  ctx: context, data: widget.tag!),
             ),
             IconButton(
               icon:
@@ -204,7 +207,7 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                         fontSize: 16,
                       ),
                       controller: _descriptionController,
-                      maxLines: 3,
+                      maxLines: 4,
                       decoration: InputDecoration(
                         hintText: 'Eg. Travel tag',
                         hintStyle:
@@ -235,50 +238,53 @@ class _AddEditTagScreenState extends ConsumerState<AddEditTagScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Status',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    if (false) ...[
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Status',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[300]!),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton<String>(
-                            value: _selectedStatus,
-                            isExpanded: true,
-                            borderRadius: BorderRadius.circular(8),
-                            items: ['active', 'archived'].map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value[0].toUpperCase() + value.substring(1),
-                                  style: const TextStyle(
-                                    fontSize: 16,
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              value: _selectedStatus,
+                              isExpanded: true,
+                              borderRadius: BorderRadius.circular(8),
+                              items: ['active', 'archived'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value[0].toUpperCase() + value.substring(1),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                setState(() {
-                                  _selectedStatus = newValue;
-                                });
-                              }
-                            },
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    _selectedStatus = newValue;
+                                  });
+                                }
+                              },
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ]
                   ],
                 ),
               ),

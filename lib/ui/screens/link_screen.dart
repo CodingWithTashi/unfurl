@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -169,13 +170,35 @@ class LinkScreen extends StatelessWidget {
                                 fontSize: 16,
                               ),
                             ),
-                            subtitle: Text(
-                              link.link.isNotEmpty
-                                  ? link.link
-                                  : link.description,
-                              style: TextStyle(),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  link.link.isNotEmpty
+                                      ? link.link
+                                      : link.description,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(link.updatedDate.isAfter(link.createdDate)
+                                    ? 'Updated on ${DateFormat('dd/MM hh:mm a').format(link.updatedDate)}'
+                                    : 'Created on ${DateFormat('dd/MM hh:mm a').format(link.createdDate)}'),
+                                const SizedBox(height: 10),
+                                Chip(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    elevation: 0,
+                                    labelPadding:
+                                        EdgeInsets.fromLTRB(0, -3, 0, -3),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 0),
+                                    label: Text(link.tag?.tagName ?? 'No Tag')),
+                                const SizedBox(height: 10),
+                              ],
                             ),
                             onTap: () {
                               Navigator.push(

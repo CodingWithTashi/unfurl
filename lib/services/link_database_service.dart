@@ -73,12 +73,12 @@ class DatabaseService {
 
   Future<List<Tag>> getAllTags() async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(tagsTable);
-    return maps
-        .map((map) => Tag.fromMap(map))
-        .toList()
-        .where((tag) => tag.status == 'active')
-        .toList();
+    // order by updatedDate DESC, createdDate DESC
+    final List<Map<String, dynamic>> maps = await db.query(
+      tagsTable,
+      orderBy: 'updatedDate DESC, createdDate DESC',
+    );
+    return maps.map((map) => Tag.fromMap(map)).toList().toList();
   }
 
   Future<int> updateTag(Tag tag) async {

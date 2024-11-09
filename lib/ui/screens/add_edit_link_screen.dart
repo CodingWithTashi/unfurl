@@ -293,8 +293,7 @@ class _AddEditLinkScreenState extends ConsumerState<AddEditLinkScreen> {
                             // Clear and rebuild the list
                             tagList = [defaultTag];
                             if (snapshot.hasData) {
-                              tagList.addAll(snapshot.data!
-                                  .where((tag) => tag.status == 'active'));
+                              tagList.addAll(snapshot.data!);
                             }
 
                             // Ensure selectedTag is in the list

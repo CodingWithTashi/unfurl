@@ -107,7 +107,7 @@ class QRCodeGenerator {
               Container(
                 color: Theme.of(context).colorScheme.onSecondary,
                 child: QrImageView(
-                  size: MediaQuery.of(context).size.width * 0.3,
+                  size: MediaQuery.of(context).size.width * 0.4,
                   data: generateQRCode(data),
                 ),
               ),
